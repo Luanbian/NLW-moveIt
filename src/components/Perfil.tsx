@@ -6,7 +6,10 @@ export function Profile(){
             <img src="https://github.com/Luanbian.png" alt="img-perfil"/>
             <div>
                 <strong>Luan Almeida</strong>
-                <p>Level 1</p>
+                <p>
+                    <img src="icons/level.svg" alt="level"/>
+                    Level 1
+                </p>
             </div>
         </div>
     )

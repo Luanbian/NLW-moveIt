@@ -11,6 +11,7 @@
 
 .profileContainer div {
     margin-left: 1.5rem;
+    margin-top: -15rem;
 }
 
 .profileContainer div strong{
@@ -21,5 +22,9 @@
 
 .profileContainer div p {
     font-size: 1rem;
-    margin-top: 0.5rem;
+    margin-top: -3rem;
+}
+
+.profileContainer div p img {
+    margin-right: 0.5rem;
 }
