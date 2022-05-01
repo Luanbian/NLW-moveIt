@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import listchallenges from '../../challenges.json';
 
 interface PropsChallengeProvider{
@@ -32,6 +32,10 @@ export function ChallengeProvider({children}: PropsChallengeProvider){
 
     const experienceToNextLevel = Math.pow((level + 1) * 4, 2);
 
+    useEffect(() => {
+        Notification.requestPermission()
+    }, [])
+
     function levelUp(){
         setLevel(level + 1);
     }
@@ -40,6 +44,14 @@ export function ChallengeProvider({children}: PropsChallengeProvider){
         const ramdomChallengeIndex = Math.floor(Math.random() * listchallenges.length)
         const challenge = listchallenges[ramdomChallengeIndex];
         setActiveChallenge(challenge);
+
+        new Audio('/notification.mp3').play();
+
+        if(Notification.permission === 'granted'){
+            new Notification('Novo desafio',{
+                body: `Valendo ${challenge.amount}xp`
+            })
+        }
     }
 
     function resetChallenge(){
