@@ -1,8 +1,12 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import listchallenges from '../../challenges.json';
+import Cookies from 'js-cookie';
 
 interface PropsChallengeProvider{
     children: ReactNode;
+    level: number;
+    currentExperience: number;
+    challengeCompleteds: number;
 }
 
 interface ChallengeList{
@@ -12,7 +16,7 @@ interface ChallengeList{
 }
 interface ChallengeContextData{
     level: number; 
-    currentExperiente: number; 
+    currentExperience: number; 
     challengesCompleteds:number; 
     levelUp: () => void;
     startNewChallenge: () => void;
@@ -24,10 +28,10 @@ interface ChallengeContextData{
 
 export const ChallengesContext = createContext({} as ChallengeContextData);
 
-export function ChallengeProvider({children}: PropsChallengeProvider){
-    const [level, setLevel] = useState(1);
-    const [currentExperiente, SetExperience] = useState(0);
-    const [challengesCompleteds, setChallengeCompleteds] = useState(0);
+export function ChallengeProvider({children, ...rest}: PropsChallengeProvider){
+    const [level, setLevel] = useState(rest.level ?? 1);
+    const [currentExperience, SetExperience] = useState(rest.currentExperience ?? 0);
+    const [challengesCompleteds, setChallengeCompleteds] = useState(rest.challengeCompleteds ?? 0);
     const [activeChallenge, setActiveChallenge] = useState(null);
 
     const experienceToNextLevel = Math.pow((level + 1) * 4, 2);
@@ -35,6 +39,12 @@ export function ChallengeProvider({children}: PropsChallengeProvider){
     useEffect(() => {
         Notification.requestPermission()
     }, [])
+
+    useEffect(() => {
+        Cookies.set('level', String(level));
+        Cookies.set('currentExperience', String(currentExperience));
+        Cookies.set('challengesCompleteds', String(challengesCompleteds));
+    }, [level, currentExperience, challengesCompleteds])
 
     function levelUp(){
         setLevel(level + 1);
@@ -64,7 +74,7 @@ export function ChallengeProvider({children}: PropsChallengeProvider){
         }
 
         const {amount} = activeChallenge;
-        let finalExperience = currentExperiente + amount;
+        let finalExperience = currentExperience + amount;
 
         if(finalExperience > experienceToNextLevel){
             finalExperience = finalExperience - experienceToNextLevel;
@@ -80,7 +90,7 @@ export function ChallengeProvider({children}: PropsChallengeProvider){
         <ChallengesContext.Provider 
         value={{ 
             level, 
-            currentExperiente, 
+            currentExperience, 
             challengesCompleteds, 
             levelUp, 
             startNewChallenge,
